@@ -1,0 +1,29 @@
+#!groovy
+properties([disableConcurrentBuilds()])
+
+pipeline {
+    agent {
+            label 'master'
+        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+        timestamps()
+    }
+    stages {
+        stage("Copy repository") {
+            steps {
+                sh ' scp -r ~/workspace/tz_stock_exchange root@192.168.2.34:~/www/'
+            }
+        }
+        stage("Build docker image") {
+            steps {
+                sh ' ssh root@192.168.2.34 \' docker build -t keksogramm -f www/tz_stock_exchange/Dockerfile . \''
+            }
+        }
+        stage("Run docker image") {
+             steps {
+                sh ' ssh root@192.168.2.34 \' docker run -d --rm -v ~/www:/www/ -p 80:80 keksogramm \''
+             }
+        }
+    }
+}

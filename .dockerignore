@@ -1,0 +1,9 @@
+.git
+.cache
+.md
+.gitignore
+.gitattributes
+.editorconfig
+.idea/
+Dockerfile
+*.jenkins
