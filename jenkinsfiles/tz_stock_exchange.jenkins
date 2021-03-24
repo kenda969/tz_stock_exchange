@@ -1,0 +1,29 @@
+#!groovy
+properties([disableConcurrentBuilds()])
+
+pipeline {
+    agent {
+            label 'master'
+        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+        timestamps()
+    }
+    stages {
+        stage("Copy repository") {
+            steps {
+                sh ' scp -r ~/workspace/tz_stock_exchange root@192.168.2.34:~/'
+            }
+        }
+        stage("Test config NGINX") {
+            steps {
+                sh ' ssh root@192.168.2.34 \'cd ~/tz_stock_exchange''
+            }
+        }
+        stage("Install Gnu Gatekeeper ") {
+             steps {
+                sh ' ssh root@10.90.0.102 \'/root/install_gkCO7.sh\''
+             }
+        }
+    }
+}
