@@ -1,28 +1,34 @@
 #!groovy
 properties([disableConcurrentBuilds()])
 
+CODE_CHANGES = getGitChanges()
+
 pipeline {
-    agent {
-            label 'master'
-        }
+    agent any
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
     stages {
         stage("Copy repository") {
+            when{
+            expression {
+                BRUNCH_NAME == 'develop' && CODE_CHANGES == true
+                }
+            }
             steps {
-                sh ' scp -r ~/workspace/tz_stock_exchange root@192.168.2.34:~/'
+                echo 'copy from develop brunches'
+                // sh ' scp -r ~/workspace/tz_stock_exchange root@192.168.2.34:~/'
             }
         }
         stage("Test config NGINX") {
             steps {
-                sh ' ssh root@192.168.2.34 \'cd ~/tz_stock_exchange''
+                // sh ' ssh root@192.168.2.34 \'cd ~/tz_stock_exchange''
             }
         }
         stage("Install Gnu Gatekeeper ") {
              steps {
-                sh ' ssh root@10.90.0.102 \'/root/install_gkCO7.sh\''
+                // sh ' ssh root@10.90.0.102 \'/root/install_gkCO7.sh\''
              }
         }
     }
