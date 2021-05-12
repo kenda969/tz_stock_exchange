@@ -1,6 +1,6 @@
 # Version: 0.0.1
 FROM alpine:3.13
-LABEL maintainer="Alex Lyashnevskiy Kenda969@gmail.com"
+LABEL maintainer="Alex Lyashnevskiy Kenda969@gmail.com dev"
 VOLUME /www
 EXPOSE 80
 RUN    apk add --update nginx \
